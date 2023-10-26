@@ -21,6 +21,7 @@ s3_prefix = "khana"
 region = "ap-south-1"
 disable_rollback = true
 image_repositories = []
+parameter_overrides = "DBHOST=\"envDBHost\" DBNAME=\"envDBName\" DBUSER=\"envDBUser\" DBPASSWORD=\"envDBPassword\" DBPORT=\"envDBWritePort\""
 
 [default.package.parameters]
 resolve_s3 = true
