@@ -92,7 +92,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: "/createCustomer"
+            Path: "/createdCustomer"
             Method: POST
       #Layers:
       # - !Ref CommonCodeLayer
@@ -111,7 +111,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: "/manageConsAddress"
+            Path: "/managesConsAddress"
             Method: POST
       #Layers:
       # - !Ref CommonCodeLayer
@@ -130,7 +130,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: "/validateOTP"
+            Path: "/validatedOTP"
             Method: POST
       #Layers:
       # - !Ref CommonCodeLayer
@@ -149,7 +149,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: "/getConsAddresses"
+            Path: "/getConsuAddresses"
             Method: POST
       #Layers:
       # - !Ref CommonCodeLayer
@@ -168,7 +168,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: "/signIn"
+            Path: "/siignIn"
             Method: POST
       #Layers:
       # - !Ref CommonCodeLayer
@@ -188,7 +188,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: "/getpackagelist"
+            Path: "/getpackageslist"
             Method: POST
       #Layers:
       # - !Ref CommonCodeLayer
