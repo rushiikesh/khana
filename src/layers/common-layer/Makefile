@@ -1,2 +1,2 @@
-build-CommonLayer:
-	xcopy /s * $(ARTIFACTS_DIR)
+# build-CommonLayer:
+# 	xcopy /s * $(ARTIFACTS_DIR)
