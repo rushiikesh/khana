@@ -79,6 +79,6 @@ codeuri = "D:\\Khanaanywhere\\aws\\khana\\khana\\src\\layers\\common-layer"
 build_method = "makefile"
 compatible_runtimes = ["nodejs18.x"]
 architecture = "x86_64"
-source_hash = "3d939fe8e33d4a383b9271394d04b210dd56ade35180912a04627c9ff0b07eb8"
+source_hash = "c72ed89d7a6841834881a567cf8d04e09d3bfe1728ac46999571e5da632567e2"
 manifest_hash = ""
 layer = "CommonLayer"
