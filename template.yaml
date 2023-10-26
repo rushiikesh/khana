@@ -1,120 +1,196 @@
+# TODO
+# - Enhance Policies for each lambda function
+# - Nested template.yml structure [https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-template-nested-applications.html]
+# - Solar linter for build process
+
 AWSTemplateFormatVersion: 2010-09-09
+Transform:
+  - AWS::Serverless-2016-10-31
 Description: >-
   khana
-Transform:
-- AWS::Serverless-2016-10-31
 
-# Resources declares the AWS resources that you want to include in the stack
-# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
-Resources:
-  # Each Lambda function is defined by properties:
-  # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+Parameters:
+  DBHOST:
+    Description: "Required. The Database hostname or URL"
+    Type: "String"
+    Default: "envDBHost"
+  DBNAME:
+    Description: "Required. The Database name"
+    Type: "String"
+    Default: "envDBName"
+  DBUSER:
+    Description: "Required. Db user"
+    Type: "String"
+    Default: "envDBUser"
+  DBPASSWORD:
+    Description: "Required. Db password"
+    Type: "String"
+    Default: "envDBPassword"
+  DBPORT:
+    Description: "Required. Db port"
+    Type: "String"
+    Default: "envDBWritePort"
 
-  # This is a Lambda function config associated with the source code: get-all-items.js
-  getAllItemsFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/handlers/get-all-items.getAllItemsHandler
-      Runtime: nodejs18.x
-      Architectures:
-      - x86_64
-      MemorySize: 128
-      Timeout: 100
-      Description: A simple example includes a HTTP get method to get all items from
-        a DynamoDB table.
-      Policies:
-        # Give Create/Read/Update/Delete Permissions to the SampleTable
-      - DynamoDBCrudPolicy:
-          TableName: !Ref SampleTable
-      Environment:
-        Variables:
-          # Make table name accessible as environment variable from function code during execution
-          SAMPLE_TABLE: !Ref SampleTable
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            Path: /
-            Method: GET
-  # Each Lambda function is defined by properties:
-  # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-
-  # This is a Lambda function config associated with the source code: get-by-id.js
-  getByIdFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/handlers/get-by-id.getByIdHandler
-      Runtime: nodejs18.x
-      Architectures:
-      - x86_64
-      MemorySize: 128
-      Timeout: 100
-      Description: A simple example includes a HTTP get method to get one item by
-        id from a DynamoDB table.
-      Policies:
-        # Give Create/Read/Update/Delete Permissions to the SampleTable
-      - DynamoDBCrudPolicy:
-          TableName: !Ref SampleTable
-      Environment:
-        Variables:
-          # Make table name accessible as environment variable from function code during execution
-          SAMPLE_TABLE: !Ref SampleTable
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            Path: /{id}
-            Method: GET
-  # Each Lambda function is defined by properties:
-  # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-
-  # This is a Lambda function config associated with the source code: put-item.js
-  putItemFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/handlers/put-item.putItemHandler
-      Runtime: nodejs18.x
-      Architectures:
-      - x86_64
-      MemorySize: 128
-      Timeout: 100
-      Description: A simple example includes a HTTP post method to add one item to
-        a DynamoDB table.
-      Policies:
-        # Give Create/Read/Update/Delete Permissions to the SampleTable
-      - DynamoDBCrudPolicy:
-          TableName: !Ref SampleTable
-      Environment:
-        Variables:
-          # Make table name accessible as environment variable from function code during execution
-          SAMPLE_TABLE: !Ref SampleTable
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            Path: /
-            Method: POST
-  # Simple syntax to create a DynamoDB table with a single attribute primary key, more in
-  # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlesssimpletable
-
-  # DynamoDB table to store item: {id: &lt;ID&gt;, name: &lt;NAME&gt;}
-  SampleTable:
-    Type: AWS::Serverless::SimpleTable
-    Properties:
-      PrimaryKey:
-        Name: id
-        Type: String
-      ProvisionedThroughput:
-        ReadCapacityUnits: 2
-        WriteCapacityUnits: 2
-
-Outputs:
-  WebEndpoint:
-    Description: API Gateway endpoint URL for Prod stage
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
-# # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Tracing: Active
-  Api:
-    TracingEnabled: true
+    Environment:
+      Variables:
+        DB_HOST: !Ref DBHOST
+        DB_NAME: !Ref DBNAME
+        DB_USER: !Ref DBUSER
+        DB_PASSWORD: !Ref DBPASSWORD
+        DB_PORT: !Ref DBPORT
+        LIMIT: 10
+    Runtime: nodejs18.x
+    MemorySize: 128
+    Timeout: 60
+    Layers:
+      - !Ref CommonLayer
+
+Resources:
+  lambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+        - arn:aws:iam::aws:policy/SecretsManagerReadWrite
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaRole
+        - arn:aws:iam::aws:policy/AWSLambdaExecute
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+              
+  CommonLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: common-layer
+      Description: Code shared across all lambda functions
+      ContentUri: src/layers/common-layer
+      CompatibleRuntimes:
+        - nodejs18.x
+      RetentionPolicy: Delete
+    Metadata:
+      BuildMethod: makefile
+
+  createCustomer:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/handlers/createCustomer
+      Handler: index.handler
+      FunctionName: postconsumer
+      Description: "A lambda to create customer."
+      Role: !GetAtt lambdaExecutionRole.Arn
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: "/createCustomer"
+            Method: POST
+      #Layers:
+      # - !Ref CommonCodeLayer
+    Metadata:
+      BuildMethod: nodejs18.x
+
+  manageConsAddress:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/handlers/manageConsAddress
+      Handler: index.handler
+      FunctionName: postaddress
+      Description: "A lambda to manage customer address."
+      Role: !GetAtt lambdaExecutionRole.Arn
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: "/manageConsAddress"
+            Method: POST
+      #Layers:
+      # - !Ref CommonCodeLayer
+    Metadata:
+      BuildMethod: nodejs18.x
+
+  validateOTP:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/handlers/validateOTP
+      Handler: index.handler
+      FunctionName: postotp
+      Description: "A lambda to validate OTP"
+      Role: !GetAtt lambdaExecutionRole.Arn
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: "/validateOTP"
+            Method: POST
+      #Layers:
+      # - !Ref CommonCodeLayer
+    Metadata:
+      BuildMethod: nodejs18.x
+
+  getConsAddresses:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/handlers/getConsAddresses
+      Handler: index.handler
+      FunctionName: getaddress
+      Description: "A lambda to get list of consumer addresses"
+      Role: !GetAtt lambdaExecutionRole.Arn
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: "/getConsAddresses"
+            Method: POST
+      #Layers:
+      # - !Ref CommonCodeLayer
+    Metadata:
+      BuildMethod: nodejs18.x
+
+  signIn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/handlers/signIn
+      Handler: index.handler
+      FunctionName: postsign
+      Description: "A lambda to signIn"
+      Role: !GetAtt lambdaExecutionRole.Arn
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: "/signIn"
+            Method: POST
+      #Layers:
+      # - !Ref CommonCodeLayer
+    Metadata:
+      BuildMethod: nodejs18.x
+
+
+  getPackageList:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/handlers/getPackageList
+      Handler: index.handler
+      FunctionName: postpack
+      Description: "A lambda to signIn"
+      Role: !GetAtt lambdaExecutionRole.Arn
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: "/getpackagelist"
+            Method: POST
+      #Layers:
+      # - !Ref CommonCodeLayer
+    Metadata:
+      BuildMethod: nodejs18.x
