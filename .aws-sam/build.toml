@@ -37,42 +37,6 @@ functions = ["validateOTP"]
 [function_build_definitions.302b3a10-1c1d-4665-b87e-5ac2bb7653be.metadata]
 BuildMethod = "nodejs18.x"
 
-[function_build_definitions.c771e15d-4dcb-4be8-9a6e-ed19cc29e086]
-codeuri = "D:\\Khanaanywhere\\aws\\khana\\khana\\src\\handlers\\getConsAddresses"
-runtime = "nodejs18.x"
-architecture = "x86_64"
-handler = "index.handler"
-manifest_hash = ""
-packagetype = "Zip"
-functions = ["getConsAddresses"]
-
-[function_build_definitions.c771e15d-4dcb-4be8-9a6e-ed19cc29e086.metadata]
-BuildMethod = "nodejs18.x"
-
-[function_build_definitions.0be0aa8d-175d-40b1-a2d4-befa6c087732]
-codeuri = "D:\\Khanaanywhere\\aws\\khana\\khana\\src\\handlers\\signIn"
-runtime = "nodejs18.x"
-architecture = "x86_64"
-handler = "index.handler"
-manifest_hash = ""
-packagetype = "Zip"
-functions = ["signIn"]
-
-[function_build_definitions.0be0aa8d-175d-40b1-a2d4-befa6c087732.metadata]
-BuildMethod = "nodejs18.x"
-
-[function_build_definitions.43579530-bd29-432e-9202-3f07a82999e3]
-codeuri = "D:\\Khanaanywhere\\aws\\khana\\khana\\src\\handlers\\getPackageList"
-runtime = "nodejs18.x"
-architecture = "x86_64"
-handler = "index.handler"
-manifest_hash = ""
-packagetype = "Zip"
-functions = ["getPackageList"]
-
-[function_build_definitions.43579530-bd29-432e-9202-3f07a82999e3.metadata]
-BuildMethod = "nodejs18.x"
-
 [layer_build_definitions.4207dba2-9119-4536-8120-b0092b9b51bf]
 layer_name = "CommonLayer"
 codeuri = "D:\\Khanaanywhere\\aws\\khana\\khana\\src\\layers\\common-layer"
