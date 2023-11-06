@@ -168,7 +168,7 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: "/siignIn"
+            Path: "/siigniIn"
             Method: POST
       #Layers:
       # - !Ref CommonCodeLayer
