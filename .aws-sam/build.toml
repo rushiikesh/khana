@@ -37,6 +37,18 @@ functions = ["validateOTP"]
 [function_build_definitions.302b3a10-1c1d-4665-b87e-5ac2bb7653be.metadata]
 BuildMethod = "nodejs18.x"
 
+[function_build_definitions.eeca1b05-2bf2-4b13-b1e3-5ec190f63677]
+codeuri = "D:\\Khanaanywhere\\aws\\khana\\khana\\src\\handlers\\signIn"
+runtime = "nodejs18.x"
+architecture = "x86_64"
+handler = "index.handler"
+manifest_hash = ""
+packagetype = "Zip"
+functions = ["signIn"]
+
+[function_build_definitions.eeca1b05-2bf2-4b13-b1e3-5ec190f63677.metadata]
+BuildMethod = "nodejs18.x"
+
 [layer_build_definitions.4207dba2-9119-4536-8120-b0092b9b51bf]
 layer_name = "CommonLayer"
 codeuri = "D:\\Khanaanywhere\\aws\\khana\\khana\\src\\layers\\common-layer"

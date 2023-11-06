@@ -135,3 +135,23 @@ Resources:
     Metadata:
       BuildMethod: nodejs18.x
       SamResourceId: validateOTP
+  signIn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: signIn
+      Handler: index.handler
+      FunctionName: postsign
+      Description: A lambda to signIn
+      Role:
+        Fn::GetAtt:
+        - lambdaExecutionRole
+        - Arn
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /siignIn
+            Method: POST
+    Metadata:
+      BuildMethod: nodejs18.x
+      SamResourceId: signIn
