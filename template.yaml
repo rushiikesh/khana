@@ -156,24 +156,24 @@ Resources:
   #   Metadata:
   #     BuildMethod: nodejs18.x
 
-  signIn:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: src/handlers/signIn
-      Handler: index.handler
-      FunctionName: postsign
-      Description: "A lambda to signIn"
-      Role: !GetAtt lambdaExecutionRole.Arn
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            Path: "/siigniIn"
-            Method: POST
-      #Layers:
-      # - !Ref CommonCodeLayer
-    Metadata:
-      BuildMethod: nodejs18.x
+  # signIn:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     CodeUri: src/handlers/signIn
+  #     Handler: index.handler
+  #     FunctionName: postsign
+  #     Description: "A lambda to signIn"
+  #     Role: !GetAtt lambdaExecutionRole.Arn
+  #     Events:
+  #       Api:
+  #         Type: Api
+  #         Properties:
+  #           Path: "/siigniIn"
+  #           Method: POST
+  #     #Layers:
+  #     # - !Ref CommonCodeLayer
+  #   Metadata:
+  #     BuildMethod: nodejs18.x
 
 
   # getPackageList:

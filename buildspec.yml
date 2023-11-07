@@ -21,4 +21,5 @@ phases:
 artifacts:
   type: zip
   files:
-    - '**/*'  # template.yaml
+    - buildspec.yml # '**/*'  
+    - template.yaml
